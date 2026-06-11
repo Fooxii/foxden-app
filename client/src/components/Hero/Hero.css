@@ -1,0 +1,47 @@
+.hero {
+    text-align: left;
+    margin: 10px;
+    padding: 5px;
+    border-bottom: 1.5px solid #2a2a38;
+}
+
+.highlight {
+    color: #f97316;
+}
+
+p {
+    padding: 5px;
+}
+
+.button1 {
+    cursor: pointer;
+    margin-left: 25px;
+    padding: 12px 25px 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    background-color: #f97316;
+    border-radius: 10px;
+    border: none;
+    transition: transform 0.18s ease-in-out;
+}
+
+.button1:hover {
+    transform: scale(1.1);
+}
+
+.button2 {
+    cursor: pointer;
+    margin-left: 15px;
+    padding: 12px 25px 12px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    transition: transform 0.18s ease-in-out;
+}
+
+.button2:hover {
+    transform: scale(1.1);
+}
