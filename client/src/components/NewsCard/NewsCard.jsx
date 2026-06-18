@@ -5,7 +5,7 @@ export default function NewsCard({ title, source, time, contentType, tags }) {
       <p>{time}</p>
       <h3>{title}</h3>
       {tags.map((tag) => (
-        <p>{tag}</p>
+        <p key={tag}>{tag}</p>
       ))}
     </div>
   )

@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage'
 import FeedPage from './pages/FeedPage'
 import ProfilePage from './pages/ProfilePage'
 import SignUpPage from './pages/SignupPage'
+import LoginPage from './pages/LoginPage'
 import './App.css'
 
 export default function App() {
@@ -15,6 +16,7 @@ export default function App() {
         <Route path='/feed' element={<FeedPage />} />
         <Route path='/profile' element={<ProfilePage />} />
         <Route path='/signup' element={<SignUpPage />} />
+        <Route path='/login' element={<LoginPage />} />
       </Routes>
     </BrowserRouter>
   )
