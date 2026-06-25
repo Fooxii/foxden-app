@@ -19,9 +19,9 @@ def fetch_all_sources():
         if content_item.get('type') == 'text/html':
           raw_html = content_item['value']
           if not item.get('id'):
-              guid = item.link
+              source_guid = item.link
           else:
-              guid = item.id
+              source_guid = item.id
           title = item.title
           author = item.author
           link = item.link
@@ -29,7 +29,7 @@ def fetch_all_sources():
           published = item.published
 
           entry = {
-            "guid": guid,
+            "source_guid": source_guid,
             "title": title,
             "author": author,
             "link": link,
