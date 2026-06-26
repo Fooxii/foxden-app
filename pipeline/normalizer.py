@@ -22,7 +22,7 @@ def normalize_entry(entry):
         "author": entry["author"],
         "link": entry["link"],
         "thumbnail": entry["thumbnail"],
-        "summary": clean_html(entry["raw_html"]),
+        "content": clean_html(entry["raw_html"]),
         "published": entry["published"]
     }
 
