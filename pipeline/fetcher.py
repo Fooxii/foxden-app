@@ -1,50 +1,54 @@
 # THE FETCHER FILE IS USED TO FETCH DATA FROM A LIST OF SOURCES
 import feedparser
-#+import source list from external file
+from supabase_client import supabase
 
-#-Temp source list for testing
-source_list = ['https://www.pcgamer.com/feeds.xml']
+# fetches only rss sources from the sources table
+def get_rss_sources():
+  response = supabase.table("sources").select("id, url").eq("source_type", "rss").execute()
+  return response.data
+
+
 def fetch_all_sources():
-  # list containing rss output of each source
   feed_all = []
+  sources = get_rss_sources()
 
-  # iterates through each source
-  for source in source_list:
-    # feed is the entire xml page
-    feed = feedparser.parse(source)
-    # iterates through each article
+  for source in sources:
+    feed = feedparser.parse(source["url"])
+
     for item in feed.entries:
+      # finds html content, falls back to summary if missing
       raw_html = None
-      for content_item in item.content:
-        if content_item.get('type') == 'text/html':
-          raw_html = content_item['value']
-          if not item.get('id'):
-              source_guid = item.link
-          else:
-              source_guid = item.id
-          title = item.title
-          author = item.author
-          link = item.link
-          thumbnail = item.media_thumbnail[0]['url']
-          published = item.published
+      if item.get('content'):
+        for content_item in item.content:
+          if content_item.get('type') == 'text/html':
+            raw_html = content_item['value']
+            break
 
-          entry = {
-            "source_guid": source_guid,
-            "title": title,
-            "author": author,
-            "link": link,
-            "thumbnail": thumbnail,
-            "raw_html": raw_html,
-            "published": published
-          }
+      if raw_html is None:
+        raw_html = item.get('summary', '')
 
-          feed_all.append(entry)
+      # defensively find a unique identifier
+      if not item.get('id'):
+        source_guid = item.link
+      else:
+        source_guid = item.id
+
+      # defensively find a thumbnail, some sources won't have one
+      if item.get('media_thumbnail'):
+        image_url = item.media_thumbnail[0]['url']
+      else:
+        image_url = None
+
+      entry = {
+        "source_guid": source_guid,
+        "title": item.title,
+        "url": item.link,
+        "image_url": image_url,
+        "raw_html": raw_html,
+        "published_at": item.published,
+        "source_id": source["id"]
+      }
+
+      feed_all.append(entry)
 
   return feed_all
-
-      # ------------ FOR TESTING ------------------
-      # print(item.title)
-      # print(item.author)
-      # print(item.link)
-      # print(item.media_thumbnail[0]['url'])
-      # print(clean_text)
