@@ -1,10 +1,16 @@
-# FINDS TAGS WITH NO EMBEDDING YET (CREATED DIRECTLY FROM THE FRONTEND),
-# GENERATES THE EMBEDDING, AND BACKFILLS MATCHES AGAINST EXISTING ARTICLES
+# THE PENDING TAG PROCESSOR WILL FIND TAGS WITH NO EMBEDDING, GENERATE IT AND MATCH THE TAGS WITH EXISTING ARTICLES
 
 from supabase_client import supabase
-from tag_creation import enrich_tag_locally
 from embedding_generator import generate_tag_embedding
 from topic_filter import match_tag_against_existing_articles
+
+
+def enrich_tag_locally(name, interest_description):
+  return (
+    f"{name} news and articles related to {interest_description}. "
+    f"Covers updates, releases, reviews, and discussions about {name} "
+    f"specifically involving {interest_description}."
+  )
 
 
 def get_pending_tags():
@@ -27,10 +33,8 @@ def process_pending_tag(tag):
 def process_all_pending_tags():
   pending = get_pending_tags()
   total_matches = 0
-
   for tag in pending:
     matches = process_pending_tag(tag)
     print(f"  Tag '{tag['name']}' embedded — matched {matches} existing articles")
     total_matches += matches
-
   return len(pending), total_matches

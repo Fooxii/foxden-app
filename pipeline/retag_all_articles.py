@@ -1,6 +1,4 @@
-# ONE-TIME SCRIPT: wipes existing article-tag links and re-runs every
-# article through the current two-stage (embedding shortlist + NLI
-# classification) tagging system. Run manually, not from the scheduler.
+# THE RETAG ALL ARTICLES CLEARS EXISTING TAG TO ARTICLE LINKS AND RELINKS
 
 from supabase_client import supabase
 from topic_filter import fetch_all_tags, filter_article
