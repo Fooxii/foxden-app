@@ -1,16 +1,19 @@
-# THE TOPIC FILTER MATCHES ARTICLES TO RELEVANT TAGS USING A TWO-STAGE APPROACH:
-# CHEAP EMBEDDING SHORTLIST, THEN ACCURATE NLI CLASSIFICATION FOR THE FINAL CALL
-# OFFICIAL TAGS ARE CAPPED PER ARTICLE; CUSTOM TAGS ARE NOT
+# THE TOPIC FILTER MATCHES ARTICLES TO RELEVANT TAGS USING A TWO-STEP APPROACH, EMBEDDINGS TO SHORTEN THE LIST OF CANDIDATES AND ZERO-SHOT CLASSIFICATION TO DETERMINE THE LINK
 
 from supabase_client import supabase
 from embedding_generator import generate_article_embedding
-from relevance_classifier import shortlist_candidates, classify_text_against_labels
+from relevance_classifier import (
+  shortlist_candidates,
+  classify_text_against_labels,
+  classify_texts_against_label,
+  build_classification_label
+)
 
 MAX_OFFICIAL_TAGS_PER_ARTICLE = 2
 
 
 def fetch_all_tags():
-  response = supabase.table("tags").select("id, name, embedding, is_official").execute()
+  response = supabase.table("tags").select("id, name, embedding, is_official, keywords").execute()
   return [tag for tag in response.data if tag.get("embedding")]
 
 
@@ -60,7 +63,13 @@ def filter_article(article, article_id, all_tags):
 
   text = f"{article['title']}. {article.get('content', '')}"
   name_to_tag = {t["name"]: t for t in candidate_tags}
-  matches = classify_text_against_labels(text, list(name_to_tag.keys()))
+
+  label_map = {}
+  for name, tag in name_to_tag.items():
+    detail = (tag.get("keywords") or [""])[0] if not tag.get("is_official") else ""
+    label_map[name] = build_classification_label(name, tag.get("is_official", False), detail)
+
+  matches = classify_text_against_labels(text, label_map)
 
   official_matches = []
   custom_matches = []
@@ -69,8 +78,6 @@ def filter_article(article, article_id, all_tags):
     entry = {"tag_id": tag["id"], "tag_name": name, "score": score}
     (official_matches if tag.get("is_official") else custom_matches).append(entry)
 
-  # cap official tags to the strongest N matches; custom tags are uncapped
-  # since each one belongs to a single user's own personal feed
   official_matches.sort(key=lambda m: m["score"], reverse=True)
   official_matches = official_matches[:MAX_OFFICIAL_TAGS_PER_ARTICLE]
 
@@ -90,21 +97,30 @@ def filter_all(articles_with_ids):
   return results
 
 
-def match_tag_against_existing_articles(tag_id, tag_name, tag_embedding, is_official=False):
+def match_tag_against_existing_articles(tag_id, tag_name, tag_embedding, is_official=False, label_detail=""):
   response = supabase.table("articles").select("id, title, content, embedding").execute()
   articles = [a for a in response.data if a.get("embedding")]
 
   candidate_articles = shortlist_candidates(tag_embedding, articles)
 
-  matches = 0
-  for article in candidate_articles:
-    if is_official and get_official_tag_count(article["id"]) >= MAX_OFFICIAL_TAGS_PER_ARTICLE:
-      continue
+  if is_official:
+    candidate_articles = [
+      a for a in candidate_articles
+      if get_official_tag_count(a["id"]) < MAX_OFFICIAL_TAGS_PER_ARTICLE
+    ]
 
-    text = f"{article['title']}. {article.get('content', '')}"
-    result = classify_text_against_labels(text, [tag_name])
-    if tag_name in result:
-      link_article_to_tag(article["id"], tag_id, result[tag_name])
+  if not candidate_articles:
+    return 0
+
+  classification_label = build_classification_label(tag_name, is_official, label_detail)
+  texts = [f"{a['title']}. {a.get('content', '')}" for a in candidate_articles]
+
+  scores = classify_texts_against_label(texts, classification_label)
+
+  matches = 0
+  for article, score in zip(candidate_articles, scores):
+    if score is not None:
+      link_article_to_tag(article["id"], tag_id, score)
       matches += 1
 
   return matches

@@ -1,54 +1,25 @@
-# THIS TEST FILE PULLS A SMALL SAMPLE OF REAL ARTICLES ACROSS DIFFERENT SOURCES
-# AND PRINTS THEIR FULL SIMILARITY SCORE AGAINST EVERY TAG, SORTED HIGH TO LOW
-# THIS HELPS DIAGNOSE WHETHER THE PROBLEM IS THE THRESHOLD OR THE EMBEDDINGS THEMSELVES
+# TEST TOPIC FILTER IS USED TO TEST THE TOPIC FILTERING
 
 from fetcher import fetch_all_sources
 from normalizer import normalize_entry
 from embedding_generator import generate_article_embedding
-from topic_filter import fetch_all_tags, cosine_similarity
-import json
+from relevance_classifier import shortlist_candidates, classify_text_against_labels, build_classification_label
+from topic_filter import fetch_all_tags
 
-# how many articles to sample PER SOURCE
 PER_SOURCE_SAMPLE = 2
 
 
 def get_sample_articles():
   raw = fetch_all_sources()
-
-  # group raw entries by source so we can sample evenly across all of them
   by_source = {}
   for entry in raw:
-    source_id = entry["source_id"]
-    by_source.setdefault(source_id, []).append(entry)
+    by_source.setdefault(entry["source_id"], []).append(entry)
 
   sampled_raw = []
-  for source_id, entries in by_source.items():
+  for entries in by_source.values():
     sampled_raw.extend(entries[:PER_SOURCE_SAMPLE])
 
-  # only normalize the sampled entries, not the entire fetched batch
-  # this avoids scraping full page content for articles we won't even test
-  normalized = [normalize_entry(entry) for entry in sampled_raw]
-  return normalized
-
-
-def score_article_against_all_tags(article, all_tags):
-  embedding = generate_article_embedding(article)
-
-  if embedding is None:
-    return []
-
-  scored = []
-  for tag in all_tags:
-    tag_embedding = tag["embedding"]
-
-    if isinstance(tag_embedding, str):
-      tag_embedding = json.loads(tag_embedding)
-
-    score = cosine_similarity(embedding, tag_embedding)
-    scored.append((tag["name"], round(score, 4)))
-
-  scored.sort(key=lambda x: x[1], reverse=True)
-  return scored
+  return [normalize_entry(entry) for entry in sampled_raw]
 
 
 def run_test():
@@ -56,22 +27,40 @@ def run_test():
   articles = get_sample_articles()
   print(f"Got {len(articles)} sample articles\n")
 
-  print("Fetching all tags...")
   all_tags = fetch_all_tags()
   print(f"Got {len(all_tags)} tags\n")
 
   for article in articles:
     print("=" * 80)
     print(f"TITLE: {article['title']}")
-    print(f"CONTENT LENGTH: {len(article.get('content', ''))} characters")
-    print(f"CONTENT PREVIEW: {article.get('content', '')[:150]}...")
-    print("-" * 80)
 
-    scores = score_article_against_all_tags(article, all_tags)
+    embedding = generate_article_embedding(article)
+    shortlist = shortlist_candidates(embedding, all_tags)
+    print(f"STAGE 1 shortlist ({len(shortlist)}): {[t['name'] for t in shortlist]}")
 
-    for tag_name, score in scores:
-      print(f"  {tag_name:<20} {score}")
+    if not shortlist:
+      print("  no candidates passed the shortlist\n")
+      continue
 
+    text = f"{article['title']}. {article.get('content', '')}"
+
+    label_map = {}
+    for tag in shortlist:
+      detail = (tag.get("keywords") or [""])[0] if not tag.get("is_official") else ""
+      label_map[tag["name"]] = build_classification_label(tag["name"], tag.get("is_official", False), detail)
+
+    print("STAGE 2 labels used:")
+    for name, label in label_map.items():
+      print(f"  {name:<20} -> \"{label}\"")
+
+    final_matches = classify_text_against_labels(text, label_map)
+
+    print("STAGE 2 final matches:")
+    if not final_matches:
+      print("  none passed the final threshold")
+    else:
+      for name, score in sorted(final_matches.items(), key=lambda x: x[1], reverse=True):
+        print(f"  {name:<20} {score}")
     print()
 
 

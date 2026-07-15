@@ -26,7 +26,11 @@ def process_pending_tag(tag):
   supabase.table("tags").update({"embedding": embedding}).eq("id", tag["id"]).execute()
 
   return match_tag_against_existing_articles(
-    tag["id"], tag["name"], embedding, is_official=tag.get("is_official", False)
+    tag["id"],
+    tag["name"],
+    embedding,
+    is_official=tag.get("is_official", False),
+    label_detail=interest_description
   )
 
 

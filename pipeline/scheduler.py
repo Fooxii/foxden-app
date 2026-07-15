@@ -43,10 +43,10 @@ def check_pending_tags():
 
 
 scheduler = BlockingScheduler()
-scheduler.add_job(run_pipeline, 'interval', minutes=15)
-scheduler.add_job(check_pending_tags, 'interval', seconds=20)
+scheduler.add_job(run_pipeline, 'interval', minutes=15, max_instances=1, coalesce=True)
+scheduler.add_job(check_pending_tags, 'interval', seconds=60, max_instances=1, coalesce=True)
 
 if __name__ == "__main__":
-  print("Scheduler starting — full pipeline every 15 minutes, pending tags every 20 seconds")
+  print("Scheduler starting — full pipeline every 15 minutes, pending tags every 60 seconds")
   run_pipeline()
   scheduler.start()
