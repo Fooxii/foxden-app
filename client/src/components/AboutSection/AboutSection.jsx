@@ -9,11 +9,10 @@ export default function AboutSection() {
         <div className="about-card">
           <div className="about-avatar">?</div>
           <div className="about-text">
-            <h3>[ Your name ]</h3>
-            <p className="about-role">[ Role / course context ]</p>
+            <h3>[ Natanael Ortiz Lugo ]</h3>
+            <p className="about-role">[ FullStack Developer ]</p>
             <p className="about-bio">
-              [ Placeholder bio. A few sentences about who you are, why you
-              built FoxDen, and anything else you want visitors to know. ]
+               Passionate about all things tech, whether it's gaming, hardware or programming 
             </p>
           </div>
         </div>

@@ -23,11 +23,10 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <div className="how-it-works-wrap">
-      {steps.map((step, i) => (
-        <section className="landing-section how-it-works-step" key={step.num}>
-          <div className="landing-section-inner">
-            {i === 0 && <p className="section-label centered">How it works</p>}
+    <section className="landing-section how-it-works-wrap">
+      <div className="steps-row">
+        {steps.map((step) => (
+          <div className="how-it-works-step" key={step.num}>
             <div className="step-card-large">
               <div className="step-icon-large">{step.icon}</div>
               <span className="step-num-large">{step.num}</span>
@@ -35,8 +34,8 @@ export default function HowItWorks() {
               <p className="step-text-large">{step.text}</p>
             </div>
           </div>
-        </section>
-      ))}
-    </div>
+        ))}
+      </div>
+    </section>
   )
 }
