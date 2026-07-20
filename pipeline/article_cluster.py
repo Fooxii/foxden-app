@@ -66,6 +66,10 @@ def link_article_to_cluster(article_id, cluster_id):
     "cluster_id": cluster_id
   }).execute()
 
+  supabase.table("articles").update({
+    "cluster_id": cluster_id
+  }).eq("id", article_id).execute()
+
 
 def cluster_article(article, article_id):
   article_embedding = generate_article_embedding(article)

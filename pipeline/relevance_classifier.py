@@ -5,7 +5,7 @@ import numpy as np
 import json
 
 SHORTLIST_COSINE_THRESHOLD = 0.20
-SHORTLIST_MAX_CANDIDATES = 15
+SHORTLIST_MAX_CANDIDATES = 6
 FINAL_MATCH_THRESHOLD = 0.55
 
 _classifier = None
@@ -16,7 +16,8 @@ def get_classifier():
   if _classifier is None:
     _classifier = pipeline(
       "zero-shot-classification",
-      model="MoritzLaurer/deberta-v3-large-zeroshot-v2.0"
+      model="MoritzLaurer/deberta-v3-base-zeroshot-v2.0",
+      batch_size=8
     )
   return _classifier
 
@@ -45,18 +46,12 @@ def shortlist_candidates(target_embedding, pool, embedding_field="embedding"):
 
 
 def build_classification_label(name, is_official, detail=""):
-  # official tag names (Gaming, PC Hardware, AI...) already read as natural
-  # zero-shot labels on their own. custom tags are user-invented names
-  # (e.g. "Valve Devices") that carry little meaning by themselves — folding
-  # in a short piece of the user's own description gives the model
-  # something concrete to actually judge the article against
   if is_official or not detail:
     return name
-  return f"{name} ({detail[:120]})"
+  return f"{name}, such as {detail[:150]}"
 
 
-def classify_text_against_labels(text, label_map):
-  # label_map: { display_name: classification_label_text }
+def get_raw_classification_scores(text, label_map):
   if not label_map:
     return {}
 
@@ -67,18 +62,18 @@ def classify_text_against_labels(text, label_map):
 
   label_to_name = {v: k for k, v in label_map.items()}
 
-  matches = {}
-  for label_text, score in zip(result["labels"], result["scores"]):
-    if score >= FINAL_MATCH_THRESHOLD:
-      display_name = label_to_name.get(label_text, label_text)
-      matches[display_name] = round(score, 4)
-  return matches
+  return {
+    label_to_name.get(label_text, label_text): round(score, 4)
+    for label_text, score in zip(result["labels"], result["scores"])
+  }
+
+
+def classify_text_against_labels(text, label_map):
+  raw_scores = get_raw_classification_scores(text, label_map)
+  return {name: score for name, score in raw_scores.items() if score >= FINAL_MATCH_THRESHOLD}
 
 
 def classify_texts_against_label(texts, label):
-  # inverse of the function above: one label, many texts, batched into a
-  # single classifier call instead of looping — this is what keeps
-  # backfilling a new tag against many existing articles fast
   if not texts:
     return []
 

@@ -1,6 +1,15 @@
 # THE FETCHER FILE IS USED TO FETCH DATA FROM A LIST OF SOURCES
 import feedparser
+import calendar
+from datetime import datetime, timezone
 from supabase_client import supabase
+
+def get_published_at(item):
+  if item.get('published_parsed'):
+    dt = datetime.fromtimestamp(calendar.timegm(item.published_parsed), tz=timezone.utc)
+    return dt.isoformat()
+  return item.get('published')
+
 
 # fetches only rss sources from the sources table
 def get_rss_sources():
@@ -45,7 +54,7 @@ def fetch_all_sources():
         "url": item.link,
         "image_url": image_url,
         "raw_html": raw_html,
-        "published_at": item.published,
+        "published_at": get_published_at(item),
         "source_id": source["id"]
       }
 
