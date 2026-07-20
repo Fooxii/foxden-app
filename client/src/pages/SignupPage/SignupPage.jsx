@@ -42,21 +42,27 @@ export default function SignUpPage() {
 
     setLoading(true)
 
-    // name and tag_ids both travel as auth metadata — the handle_new_user
-    // trigger creates the profile and follows these tags in one atomic,
-    // server-side transaction, immune to session-timing RLS gaps
-    const { data, error: authError } = await supabase.auth.signUp({
+    const { data, error } = await supabase.auth.signUp({
       email,
       password,
-      options: { data: { name, tag_ids: [...selectedTagIds] } }
+      options: {
+        emailRedirectTo: `${window.location.origin}/feed`,
+        data: {
+          name: name.trim(),
+          tag_ids: Array.from(selectedTagIds)
+        }
+      }
     })
 
     setLoading(false)
 
-    if (authError) { setError(authError.message); return }
+    if (error) { setError(error.message); return }
 
-    if (data.session) navigate('/feed')
-    else setMessage('Account created! Check your email to confirm, then log in.')
+    if (data.session) {
+      navigate('/feed')
+    } else {
+      setMessage('Account created! Check your email to confirm, then you can log in.')
+    }
   }
 
   return (
