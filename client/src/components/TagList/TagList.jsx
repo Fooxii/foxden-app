@@ -1,8 +1,10 @@
+import './TagList.css'
+
 export default function TagList({ tags }) {
-  return(
-    <div>
+  return (
+    <div className="tag-list">
       {tags.map((tag) => (
-        <span key={tag}>{tag}</span>
+        <span key={tag} className="tag-pill">{tag}</span>
       ))}
     </div>
   )

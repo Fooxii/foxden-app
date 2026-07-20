@@ -1,0 +1,98 @@
+.signup-page {
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+
+.signup-page h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 24px;
+}
+
+.signup-page .form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.signup-page .input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.signup-page label {
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 500;
+}
+
+.signup-page input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.signup-page input:focus {
+  border-color: var(--accent);
+}
+
+.signup-page button[type="submit"] {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.signup-page button[type="submit"]:hover {
+  background: var(--accent-hover);
+}
+
+.signup-page .signup-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.signup-page .signup-footer a {
+  color: var(--accent);
+}
+
+.onboarding-tags {
+  margin: 4px 0;
+}
+
+.onboarding-tags h3 {
+  font-size: 13px;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
+}
+
+.onboarding-tags > p {
+  font-size: 13px;
+  color: var(--text2);
+  margin: 0 0 12px;
+}
+
+.tag-suggest-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}

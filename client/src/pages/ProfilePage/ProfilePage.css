@@ -1,0 +1,28 @@
+.profile-page {
+  padding-top: 8px;
+}
+
+.profile-section {
+  margin-bottom: 28px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+}
+
+.profile-section h3 {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text2);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.empty-note {
+  color: var(--text3);
+  font-size: 13px;
+}

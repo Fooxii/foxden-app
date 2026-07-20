@@ -1,0 +1,52 @@
+.about-inner {
+  max-width: 720px;
+}
+
+.about-card {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.about-avatar {
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: linear-gradient(135deg, var(--accent), #ff8a4c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 28px;
+  color: #fff;
+}
+
+.about-text h3 {
+  font-size: 20px;
+  color: var(--text);
+  margin: 0 0 4px;
+}
+
+.about-role {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin: 0 0 12px;
+}
+
+.about-bio {
+  font-size: 15px;
+  color: var(--text2);
+  line-height: 1.7;
+  margin: 0;
+}
+
+@media (max-width: 560px) {
+  .about-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}

@@ -1,15 +1,20 @@
+import { useNavigate } from 'react-router-dom'
 import './Hero.css'
 
 export default function Hero() {
+  const navigate = useNavigate()
+
   return (
-    <div className='hero'>
-      <p className='highlight txt1'>PERSONALIZED NEWS</p>
-      <h1>Built around your interests.</h1>
-      <p className='txt2'>Keep track of topics you care about, all in one place.</p>
-      <div className='button-container'>
-        <button className='button1'>Get started</button>
-        <button className='button2'>Browse feed</button>
+    <section className="landing-section hero-section">
+      <div className="landing-section-inner hero-inner">
+        <div className="hero-eyebrow">Personalized news</div>
+        <h1>Built around your <em>interests</em>.</h1>
+        <p className="hero-lead">Keep track of topics you care about, all in one place — from broad categories down to the single game, team, or company you follow closest.</p>
+        <div className="hero-actions">
+          <button className="btn-primary" onClick={() => navigate('/signup')}>Get started</button>
+          <button className="btn-ghost" onClick={() => navigate('/feed')}>Browse feed</button>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

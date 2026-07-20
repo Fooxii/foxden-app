@@ -1,0 +1,62 @@
+.notification-settings {
+  margin-top: 24px;
+}
+
+.notification-settings h3 {
+  color: #8888a0;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.notif-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a2a38;
+}
+
+.notif-row:last-child {
+  border-bottom: none;
+}
+
+.notif-label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #eeeef2;
+}
+
+.toggle {
+  width: 38px;
+  height: 22px;
+  border-radius: 999px;
+  background: #1e1e27;
+  border: 1px solid #2a2a38;
+  position: relative;
+  cursor: pointer;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.toggle.on {
+  background: #f97316;
+  border-color: #f97316;
+}
+
+.toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  transition: transform 0.2s;
+}
+
+.toggle.on::after {
+  transform: translateX(16px);
+}
