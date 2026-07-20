@@ -3,10 +3,16 @@ import { useAuth } from '../../context/AuthContext'
 import { sendChatMessage } from '../../services/chatService'
 import './ChatAssistant.css'
 
+const WELCOME_MESSAGE = {
+  role: 'assistant',
+  content: "Hi! I'm the FoxDen assistant. Ask me how to use the app — following tags, pinning, custom tags, sorting your feed, or anything else you need help with.",
+  isWelcome: true,
+}
+
 export default function ChatAssistant() {
   const { user } = useAuth()
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([])
+  const [messages, setMessages] = useState([WELCOME_MESSAGE])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -23,16 +29,22 @@ export default function ChatAssistant() {
   const handleSend = async (e) => {
     e.preventDefault()
     const text = input.trim()
+
     if (!text || loading || limitReached) return
 
-    setError(null)
+    setLoading(true)
     setInput('')
+    setError(null)
+
     const nextMessages = [...messages, { role: 'user', content: text }]
     setMessages(nextMessages)
-    setLoading(true)
 
     try {
-      const historyForApi = nextMessages.slice(0, -1).map(({ role, content }) => ({ role, content }))
+      const historyForApi = nextMessages
+        .filter((m) => !m.isWelcome && !m.isLimitMessage)
+        .slice(0, -1)
+        .map(({ role, content }) => ({ role, content }))
+
       const result = await sendChatMessage(text, historyForApi)
 
       if (result.limitReached) {
@@ -49,15 +61,21 @@ export default function ChatAssistant() {
       } else {
         setMessages((prev) => [...prev, { role: 'assistant', content: result.reply }])
         setRemaining(result.remaining)
-
-        if (result.remaining === 0) {
-          setLimitReached(true)
-        }
+        if (result.remaining === 0) setLimitReached(true)
       }
     } catch (err) {
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      if (!loading && !limitReached && input.trim()) {
+        handleSend(e)
+      }
     }
   }
 
@@ -71,18 +89,16 @@ export default function ChatAssistant() {
           </div>
 
           <div className="chat-messages" ref={scrollRef}>
-            {messages.length === 0 && (
-              <p className="chat-empty">Ask me how to use FoxDen — following tags, pinning, custom tags, and more.</p>
-            )}
             {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`chat-bubble ${m.role} ${m.isLimitMessage ? 'limit' : ''}`}
-              >
+              <div key={i} className={`chat-bubble ${m.role} ${m.isWelcome ? 'welcome' : ''} ${m.isLimitMessage ? 'limit' : ''}`}>
                 {m.content}
               </div>
             ))}
-            {loading && <div className="chat-bubble assistant typing">...</div>}
+            {loading && (
+              <div className="chat-bubble assistant typing">
+                Thinking... (this may take a few seconds)
+              </div>
+            )}
           </div>
 
           {error && <p className="chat-error">{error}</p>}
@@ -101,10 +117,11 @@ export default function ChatAssistant() {
               placeholder={limitReached ? 'Daily limit reached' : 'Ask a question...'}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyDown={handleKeyDown}
               disabled={loading || limitReached}
             />
             <button type="submit" disabled={loading || !input.trim() || limitReached}>
-              Send
+              {loading ? '...' : 'Send'}
             </button>
           </form>
         </div>
