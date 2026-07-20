@@ -1,0 +1,16 @@
+.purpose-section {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.purpose-inner {
+  max-width: 720px;
+}
+
+.purpose-body {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.75;
+  color: var(--text2);
+}

@@ -1,0 +1,32 @@
+.tag-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 4px 0 12px;
+}
+
+.tag-picker-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  background: var(--surface2);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.tag-picker-pill:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.tag-picker-pill.active {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: var(--accent-soft);
+}

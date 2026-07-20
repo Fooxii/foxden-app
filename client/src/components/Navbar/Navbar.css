@@ -1,0 +1,50 @@
+.navbar {
+  height: var(--nav-h);
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar .title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: var(--text);
+}
+
+.navbar .title .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+}
+
+.navbar .icon-container { display: flex; gap: 4px; align-items: center; }
+
+.navbar .icon-container .icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  border: none;
+  background: none;
+  color: var(--text2);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, color 0.2s;
+}
+
+.navbar .icon-container .icon svg { width: 20px; height: 20px; }
+.navbar .icon-container .icon:hover { background: var(--surface2); color: var(--text); }
+.navbar .icon-container .icon.active { background: var(--accent-soft); color: var(--accent); }

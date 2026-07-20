@@ -1,0 +1,93 @@
+.page-wrapper {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 0 20px 60px;
+}
+
+@media (min-width: 640px) {
+  .page-wrapper {
+    padding: 0 32px 60px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .page-wrapper {
+    padding: 0 48px 60px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .page-wrapper {
+    padding: 0 64px 60px;
+  }
+}
+
+.landing-section {
+  width: 100%;
+  padding: 80px 24px;
+}
+
+.landing-section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.landing-section {
+  width: 100%;
+  padding: 80px 24px;
+}
+
+.landing-section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.split-section.landing-section {
+  padding-top: 90px;
+  padding-bottom: 90px;
+}
+
+.split-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+
+.split-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.split-visual {
+  flex: 1;
+  width: 100%;
+  min-width: 0;
+}
+
+.split-body {
+  margin-top: 14px;
+  font-size: 16px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
+@media (min-width: 800px) {
+  .split-inner {
+    flex-direction: row;
+    gap: 64px;
+  }
+
+  .split-inner.reverse-on-desktop {
+    flex-direction: row-reverse;
+  }
+}

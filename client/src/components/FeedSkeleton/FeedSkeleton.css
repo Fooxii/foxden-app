@@ -1,0 +1,84 @@
+.skeleton-block {
+  background: linear-gradient(90deg, var(--surface2) 0%, var(--border) 50%, var(--surface2) 100%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton-controls {
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.skeleton-search {
+  height: 42px;
+  border-radius: 10px;
+}
+
+.skeleton-row {
+  display: flex;
+  gap: 8px;
+}
+
+.skeleton-pill {
+  width: 90px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.skeleton-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  overflow: hidden;
+  padding-bottom: 14px;
+}
+
+.skeleton-img {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+}
+
+.skeleton-line {
+  height: 14px;
+  margin: 12px 16px 0;
+}
+
+.skeleton-title {
+  width: 85%;
+}
+
+.skeleton-title-short {
+  width: 55%;
+  margin-top: 8px;
+}
+
+.skeleton-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14px 16px 0;
+}
+
+.skeleton-tag {
+  width: 60px;
+  height: 20px;
+  border-radius: 999px;
+}
+
+.skeleton-time {
+  width: 30px;
+  height: 12px;
+}

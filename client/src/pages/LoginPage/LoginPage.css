@@ -1,0 +1,74 @@
+.login-page {
+  max-width: 400px;
+  margin: 0 auto;
+  padding-top: 60px;
+}
+
+.login-page h1 {
+  font-size: 32px;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 24px;
+}
+
+.login-page .form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.login-page .input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.login-page label {
+  font-size: 13px;
+  color: var(--text2);
+  font-weight: 500;
+}
+
+.login-page input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.login-page input:focus {
+  border-color: var(--accent);
+}
+
+.login-page button[type="submit"] {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: "Syne", sans-serif;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.login-page button[type="submit"]:hover {
+  background: var(--accent-hover);
+}
+
+.login-page .signup-footer {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text2);
+}
+
+.login-page .signup-footer a {
+  color: var(--accent);
+}
