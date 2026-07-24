@@ -74,3 +74,24 @@
     font-size: 15px;
   }
 }
+
+.hero-logo {
+  width: 300px;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: -30px;
+  margin-top: -50px;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+  transition: transform 0.3s ease;
+}
+
+.hero-logo:hover {
+  transform: scale(1.04);
+}
+
+@media (max-width: 640px) {
+  .hero-logo {
+    width: 200px;
+    margin-bottom: 16px;
+  }
+}

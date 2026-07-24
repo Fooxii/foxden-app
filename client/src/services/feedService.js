@@ -23,7 +23,7 @@ function chunk(arr, size) {
 export async function getUserTags(userId) {
   const { data, error } = await supabase.from('user_tags').select('tag_id, tags(id, name)').eq('user_id', userId)
   if (error) throw error
-  return data
+  return [...new Map(data.map((t) => [t.tag_id, t])).values()]
 }
 
 export async function getArticlesForTags(tagIds) {
@@ -33,7 +33,7 @@ export async function getArticlesForTags(tagIds) {
     .select('article_id, tag_id, similarity_score, articles(*, sources(name))')
     .in('tag_id', tagIds)
   if (error) throw error
-  return data
+  return [...new Map(data.map((r) => [`${r.article_id}-${r.tag_id}`, r])).values()]
 }
 
 async function getClusterMembers(clusterIds) {
@@ -49,7 +49,9 @@ async function getClusterMembers(clusterIds) {
 
     data.forEach((row) => {
       if (!map[row.cluster_id]) map[row.cluster_id] = []
-      if (row.articles) map[row.cluster_id].push(row.articles)
+      if (row.articles && !map[row.cluster_id].some((a) => a.id === row.articles.id)) {
+        map[row.cluster_id].push(row.articles)
+      }
     })
   }
   return map
@@ -65,7 +67,9 @@ async function getClusterHeadlines(clusterIds) {
       .select('id, headline')
       .in('id', batch)
     if (error) throw error
-    data.forEach((row) => { map[row.id] = row.headline })
+    data.forEach((row) => {
+      map[row.id] = row.headline
+    })
   }
   return map
 }
@@ -109,7 +113,7 @@ export async function buildFeed(userId) {
           headline: clusterHeadlineMap[clusterId] || newest.title,
           members,
           published_at: newest.published_at,
-          score
+          score,
         }
       }
     } else {
@@ -134,7 +138,7 @@ export async function buildFeed(userId) {
     items: [...itemsByKey.values()].map((item) => ({
       ...item,
       matchedTagIds: [...item.matchedTagIds],
-      matchedTagNames: [...item.matchedTagNames]
-    }))
+      matchedTagNames: [...item.matchedTagNames],
+    })),
   }
 }

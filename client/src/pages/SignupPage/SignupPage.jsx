@@ -46,7 +46,6 @@ export default function SignUpPage() {
       email,
       password,
       options: {
-        emailRedirectTo: `${window.location.origin}/feed`,
         data: {
           name: name.trim(),
           tag_ids: Array.from(selectedTagIds)
@@ -61,7 +60,7 @@ export default function SignUpPage() {
     if (data.session) {
       navigate('/feed')
     } else {
-      setMessage('Account created! Check your email to confirm, then you can log in.')
+      setMessage('Account created! Redirecting...')
     }
   }
 
