@@ -19,7 +19,11 @@ export default function ClusterCard({ headline, members, tags }) {
       <div className="newscard-body">
         <h3 className="newscard-title">{headline}</h3>
         <div className="newscard-footer">
-          <div className="tag-list">{tags.map((t) => <span key={t} className="tag-pill">{t}</span>)}</div>
+          <div className="tag-list">
+            {[...new Set(tags)].map((t) => (
+              <span key={t} className="tag-pill">{t}</span>
+            ))}
+          </div>
         </div>
       </div>
 

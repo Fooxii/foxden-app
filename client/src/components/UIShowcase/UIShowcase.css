@@ -38,3 +38,14 @@
   border: 1px solid var(--border);
   border-radius: 999px;
 }
+
+.showcase-placeholder {
+  overflow: hidden;
+}
+
+.showcase-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}

@@ -1,11 +1,12 @@
+import feedImg from '../../assets/feedSample.png'
+import signupImg from '../../assets/signupSample.png'
+import tagImg from '../../assets/tagcreationSample.png'
 import './UIShowcase.css'
 
-// TEMPLATE ONLY — replace each heading/body and swap the placeholder
-// frame's contents for a real screenshot
 const showcaseItems = [
-  { label: 'Feed Page', heading: '[ Placeholder — feed page description ]', body: '[ Placeholder — a sentence or two about the feed. ]' },
-  { label: 'Custom Tags', heading: '[ Placeholder — custom tags description ]', body: '[ Placeholder — a sentence or two about custom tags. ]' },
-  { label: 'Story Clusters', heading: '[ Placeholder — story clusters description ]', body: '[ Placeholder — a sentence or two about clustering. ]' },
+  { label: 'Signup Page', heading: 'Create Account', body: 'Signup to start using FoxDen', image: signupImg },
+  { label: 'Custom Tags', heading: 'Add Custom Tags', body: 'Create your own tags to personalize your experience', image: tagImg },
+  { label: 'Feed Page', heading: 'Personalized Feed', body: 'Enjoy news picked just for you', image: feedImg },
 ]
 
 export default function UIShowcase() {
@@ -22,7 +23,9 @@ export default function UIShowcase() {
             <div className="split-visual">
               <div className="showcase-frame">
                 <div className="showcase-chrome"><span className="chrome-dot" /><span className="chrome-dot" /><span className="chrome-dot" /></div>
-                <div className="showcase-placeholder"><span>Drop {item.label} screenshot here</span></div>
+                <div className="showcase-placeholder">
+                  <img src={item.image} alt={`${item.label} screenshot`} className="showcase-img" />
+                </div>
               </div>
             </div>
           </div>

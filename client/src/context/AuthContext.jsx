@@ -20,7 +20,6 @@ export function AuthProvider({ children }) {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (mounted) {
         setUser(session?.user ?? null)
-
         if (!window.location.hash.includes('access_token')) {
           setLoading(false)
         }
@@ -33,8 +32,10 @@ export function AuthProvider({ children }) {
     }
   }, [])
 
+  const signOut = () => supabase.auth.signOut()
+
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, signOut }}>
       {children}
     </AuthContext.Provider>
   )
